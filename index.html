@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DailyDesk — Everything you need for a more organized day.</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/landing.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <!-- Supabase JS & Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- ========================================================================= -->
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <!-- ========================================================================= -->
+  <div id="toast-container"></div>
+
+  <!-- ========================================================================= -->
+  <!-- 1. LANDING PAGE VIEW -->
+  <!-- ========================================================================= -->
+  <div id="landing-page-container" class="landing-wrapper">
+    <div class="landing-bg-glow"></div>
+
+    <!-- Navigation -->
+    <header class="landing-nav">
+      <a href="#landing" class="brand-logo">
+        <svg viewBox="0 0 36 36" fill="none">
+          <rect width="36" height="36" rx="10" fill="url(#brandGrad)"/>
+          <path d="M10 11H26M10 18H21M10 25H24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="25" cy="22" r="4.5" fill="#06b6d4" stroke="#ffffff" stroke-width="2"/>
+          <defs>
+            <linearGradient id="brandGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#4f46e5"/>
+              <stop offset="1" stop-color="#06b6d4"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span>DailyDesk</span>
+      </a>
+
+      <ul class="landing-nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#tasks-preview">Tasks</a></li>
+        <li><a href="#expenses-preview">Expenses</a></li>
+        <li><a href="#goals-preview">Goals</a></li>
+        <li><a href="#evaluator">Competition Demo</a></li>
+      </ul>
+
+      <div class="landing-nav-actions">
+        <button class="btn btn-ghost" onclick="window.app.toggleTheme()" title="Toggle Theme">🌓</button>
+        <button class="btn btn-outline" onclick="window.app.openModal('modal-auth')">Sign In</button>
+        <button class="btn btn-primary" onclick="window.app.loginDemo('user')">Live Demo →</button>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-pill">
+        <span>✨ DailyDesk 2026 Edition</span>
+        <span>•</span>
+        <span>Supabase Cloud Integration</span>
+      </div>
+
+      <h1 class="hero-title">
+        Everything you need for a <br>
+        <span class="gradient-text">more organized day.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        DailyDesk brings your tasks, living expenses, smart notes, and personal goals into one seamless, high-performance workspace. Designed for clarity, speed, and daily peace of mind.
+      </p>
+
+      <div class="hero-cta-group">
+        <button class="btn btn-primary btn-lg" onclick="window.app.openModal('modal-auth')">
+          Get Started Free
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+        <button class="btn btn-secondary btn-lg" onclick="window.app.loginDemo('user')">
+          ⚡ 1-Click Evaluator Demo
+        </button>
+        <button class="btn btn-outline btn-lg" onclick="window.app.loginDemo('admin')">
+          🛡️ Admin Access
+        </button>
+      </div>
+
+      <!-- Live Mockup Card Preview -->
+      <div class="hero-mockup-container">
+        <div class="mockup-header-bar">
+          <div class="mockup-dots">
+            <span class="mockup-dot red"></span>
+            <span class="mockup-dot yellow"></span>
+            <span class="mockup-dot green"></span>
+          </div>
+          <div class="mockup-address">https://dailydesk.app/workspace/overview</div>
+          <div style="font-size: 0.75rem; color: var(--success); font-weight: 700;">● Cloud Connected</div>
+        </div>
+        <div class="mockup-content">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="card" style="padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+              <div class="stat-icon icon-purple" style="width: 40px; height: 40px;">✓</div>
+              <div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Today's Tasks</div>
+                <div style="font-size: 1.25rem; font-weight: 800;">4 of 5 Done</div>
+              </div>
+            </div>
+            <div class="card" style="padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+              <div class="stat-icon icon-emerald" style="width: 40px; height: 40px;">$</div>
+              <div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Today's Spending</div>
+                <div style="font-size: 1.25rem; font-weight: 800;">$84.50</div>
+              </div>
+            </div>
+            <div class="card" style="padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+              <div class="stat-icon icon-amber" style="width: 40px; height: 40px;">★</div>
+              <div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Productivity Score</div>
+                <div style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">92%</div>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border-radius: var(--radius-md);">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="badge badge-success">Completed</span>
+              <span style="font-size: 0.875rem; font-weight: 600;">System Architecture review & Supabase RLS policies</span>
+            </div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">9:30 AM</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+      <div class="section-header">
+        <span class="section-tag">Powerful Capabilities</span>
+        <h2 class="section-title">Designed for real daily productivity</h2>
+        <p>No cluttered spreadsheets or half-finished tools. DailyDesk gives you structured control over every dimension of your day.</p>
+      </div>
+
+      <div class="feature-cards-grid">
+        <!-- Feature 1: Tasks -->
+        <div class="feature-card" id="tasks-preview">
+          <div class="feature-icon-box icon-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          </div>
+          <h3>Task Management</h3>
+          <p>Prioritize high-impact work with intuitive deadlines, status flags, custom categories, instant filters, and overdue detection.</p>
+          <div class="feature-preview-chip">Low • Medium • High Priorities</div>
+        </div>
+
+        <!-- Feature 2: Expenses -->
+        <div class="feature-card" id="expenses-preview">
+          <div class="feature-icon-box icon-emerald">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          </div>
+          <h3>Personal Expense Tracker</h3>
+          <p>Log expenses in seconds, track spending by category, view interactive monthly donut charts, and export data directly to CSV.</p>
+          <div class="feature-preview-chip">Real-time Analytics & CSV Export</div>
+        </div>
+
+        <!-- Feature 3: Smart Notes -->
+        <div class="feature-card">
+          <div class="feature-icon-box icon-cyan">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          </div>
+          <h3>Color-Coded Notes</h3>
+          <p>Pin essential thoughts to the top of your workspace. Color code ideas, organize by tags, and find anything in milliseconds with search.</p>
+          <div class="feature-preview-chip">Sticky Cards & Pinned Status</div>
+        </div>
+
+        <!-- Feature 4: Goals -->
+        <div class="feature-card" id="goals-preview">
+          <div class="feature-icon-box icon-amber">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+          </div>
+          <h3>Goal Setting & Milestones</h3>
+          <p>Set target dates, track percentage completion with interactive progress bars, and calculate automatic countdowns for your dreams.</p>
+          <div class="feature-preview-chip">Target Countdowns & Visual Bars</div>
+        </div>
+
+        <!-- Feature 5: Dedicated My Day -->
+        <div class="feature-card">
+          <div class="feature-icon-box icon-pink">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line></svg>
+          </div>
+          <h3>Dedicated "My Day" Hub</h3>
+          <p>Start each morning with a single-screen command center showing today's tasks, spending limits, daily quote, and a live productivity score.</p>
+          <div class="feature-preview-chip">Daily Focus & Execution</div>
+        </div>
+
+        <!-- Feature 6: Supabase Cloud & RLS -->
+        <div class="feature-card">
+          <div class="feature-icon-box icon-indigo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <h3>Supabase Backend & Security</h3>
+          <p>Integrated with Supabase PostgreSQL and Row Level Security (RLS). Your data is strictly private and authenticated to your account.</p>
+          <div class="feature-preview-chip">PostgreSQL + RLS Protection</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="comparison-section">
+      <div class="section-header">
+        <span class="section-tag">Why DailyDesk?</span>
+        <h2 class="section-title">Turn daily chaos into structured momentum</h2>
+      </div>
+
+      <div class="comparison-grid">
+        <div class="comparison-box bad">
+          <h3 style="color: var(--danger); margin-bottom: 0.5rem;">❌ Without DailyDesk</h3>
+          <ul class="comparison-list">
+            <li><span>•</span> Tasks scattered across chat apps, sticky notes, and emails</li>
+            <li><span>•</span> No clear visibility into daily micro-expenses and monthly leaks</li>
+            <li><span>•</span> Important meeting notes lost in notepad files</li>
+            <li><span>•</span> Long-term goals forgotten without visual progress tracking</li>
+            <li><span>•</span> Mental fatigue from constant context-switching</li>
+          </ul>
+        </div>
+        <div class="comparison-box good">
+          <h3 style="color: var(--success); margin-bottom: 0.5rem;">✅ With DailyDesk</h3>
+          <ul class="comparison-list">
+            <li><span>•</span> One clean daily checklist with priority-ranked execution</li>
+            <li><span>•</span> Accurate financial overview with category distribution charts</li>
+            <li><span>•</span> Pinned, searchable notes accessible anywhere</li>
+            <li><span>•</span> Measurable goals with dynamic milestone completion</li>
+            <li><span>•</span> Automatic productivity score keeping you accountable</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Evaluator / Competition Callout -->
+    <section id="evaluator" class="cta-banner">
+      <h2>Ready for Competition Demonstration</h2>
+      <p>Built with clean HTML5, modern CSS3, responsive architecture, Chart.js visualizations, and a live Supabase backend.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <button class="btn btn-primary btn-lg" onclick="window.app.loginDemo('user')">
+          Launch User Workspace
+        </button>
+        <button class="btn btn-outline btn-lg" onclick="window.app.loginDemo('admin')">
+          Launch Admin Panel
+        </button>
+      </div>
+    </section>
+
+    <!-- Professional Footer -->
+    <footer class="landing-footer">
+      <div class="footer-inner">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-weight: 800; font-size: 1.15rem;">DailyDesk</span>
+          <span class="badge badge-primary">v1.0.0</span>
+        </div>
+        <div class="footer-copy">
+          © 2026 DailyDesk. “Everything you need for a more organized day.”
+        </div>
+        <div style="display: flex; gap: 1.5rem; font-size: 0.8125rem;">
+          <a href="https://supabase.com" target="_blank" rel="noopener">Supabase Cloud</a>
+          <a href="https://chartjs.org" target="_blank" rel="noopener">Chart.js</a>
+          <a href="#landing" onclick="window.adminUI.openSqlModal(); return false;">SQL Schema</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN APPLICATION SHELL (DASHBOARD & VIEWS) -->
+  <!-- ========================================================================= -->
+  <div id="app-shell-container" class="app-layout" style="display: none;">
+
+    <!-- Left Sidebar -->
+    <aside id="app-sidebar" class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="#dashboard" class="sidebar-brand">
+          <svg viewBox="0 0 36 36" fill="none">
+            <rect width="36" height="36" rx="10" fill="url(#brandGradSide)"/>
+            <path d="M10 11H26M10 18H21M10 25H24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="25" cy="22" r="4.5" fill="#06b6d4" stroke="#ffffff" stroke-width="2"/>
+            <defs>
+              <linearGradient id="brandGradSide" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#4f46e5"/>
+                <stop offset="1" stop-color="#06b6d4"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span>DailyDesk</span>
+        </a>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="window.app.toggleSidebar()" style="display: none;" id="sidebar-close-btn">✕</button>
+      </div>
+
+      <nav class="sidebar-menu">
+        <span class="sidebar-section-title">Navigation</span>
+        
+        <a href="#dashboard" class="nav-item" data-view="dashboard">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="#my-day" class="nav-item" data-view="my-day">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line></svg>
+          <span>My Day</span>
+          <span class="nav-badge" style="background: var(--warning-bg); color: var(--warning);">Today</span>
+        </a>
+
+        <span class="sidebar-section-title">Management</span>
+
+        <a href="#tasks" class="nav-item" data-view="tasks">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          <span>Tasks</span>
+          <span class="nav-badge" id="sidebar-tasks-count">0</span>
+        </a>
+
+        <a href="#expenses" class="nav-item" data-view="expenses">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span>Expenses</span>
+        </a>
+
+        <a href="#notes" class="nav-item" data-view="notes">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          <span>Notes</span>
+        </a>
+
+        <a href="#goals" class="nav-item" data-view="goals">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+          <span>Goals</span>
+        </a>
+
+        <span class="sidebar-section-title">System</span>
+
+        <a href="#admin" class="nav-item" data-view="admin" id="nav-item-admin">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span>Admin Panel</span>
+        </a>
+
+        <a href="#profile" class="nav-item" data-view="profile">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span>Profile</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar User Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-user" onclick="window.router.navigate('profile')">
+          <div class="user-avatar user-avatar-display">A</div>
+          <div class="user-info">
+            <div class="user-name user-name-display">Alex Morgan</div>
+            <span class="user-role-display badge badge-primary" style="font-size: 0.65rem; padding: 0.1rem 0.4rem;">user</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+          <button class="btn btn-outline btn-sm" style="flex: 1;" onclick="window.app.toggleTheme()">🌓 Mode</button>
+          <button class="btn btn-secondary btn-sm" style="flex: 1;" onclick="window.app.logout()">Log Out</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <main class="app-main">
+      <!-- Top Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="menu-toggle-btn btn btn-ghost btn-sm btn-icon" onclick="window.app.toggleSidebar()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+
+          <div class="header-search-bar" onclick="window.searchUI.open()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span>Search DailyDesk...</span>
+            <span class="search-shortcut-kbd">Ctrl K</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="date-indicator">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span id="header-current-date">Today</span>
+          </div>
+
+          <!-- Quick "+ New" Dropdown trigger -->
+          <div style="position: relative;">
+            <button class="btn btn-primary btn-sm" onclick="window.tasksUI.openCreateModal()">
+              + New Task
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- View Containers -->
+      <div class="app-content">
+
+        <!-- ================= VIEW 1: DASHBOARD ================= -->
+        <div id="view-dashboard" class="view-container">
+          <div class="page-header">
+            <div class="page-title-group">
+              <h1 id="dash-greeting-text">Welcome back!</h1>
+              <p id="dash-quote-text" style="font-style: italic; color: var(--text-muted);">"Make each day your masterpiece."</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-secondary btn-sm" onclick="window.expensesUI.openCreateModal()">+ Log Expense</button>
+              <button class="btn btn-primary btn-sm" onclick="window.tasksUI.openCreateModal()">+ Add Task</button>
+            </div>
+          </div>
+
+          <!-- 4 Stat Cards -->
+          <div class="stats-grid" id="dash-stats-grid"></div>
+
+          <!-- Charts Row -->
+          <div class="grid-equal-2col">
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <h3>Task Completion Ratio</h3>
+                <span class="badge badge-success">Live Status</span>
+              </div>
+              <div class="chart-container-box">
+                <canvas id="dashTaskDistributionChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <h3>Spending by Category</h3>
+                <span class="badge badge-primary">Expense Distribution</span>
+              </div>
+              <div class="chart-container-box">
+                <canvas id="dashExpenseTrendChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-Col Previews: Today's Tasks & Spending -->
+          <div class="grid-2col">
+            <div class="card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                <h3>Upcoming Tasks</h3>
+                <a href="#tasks" class="btn btn-ghost btn-sm">View All →</a>
+              </div>
+              <div id="dash-tasks-preview-list"></div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+              <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                  <h3>Recent Expenses</h3>
+                  <a href="#expenses" class="btn btn-ghost btn-sm">View All →</a>
+                </div>
+                <div id="dash-expenses-preview-list"></div>
+              </div>
+
+              <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                  <h3>Active Goals</h3>
+                  <a href="#goals" class="btn btn-ghost btn-sm">View All →</a>
+                </div>
+                <div id="dash-goals-preview-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 2: MY DAY ================= -->
+        <div id="view-my-day" class="view-container">
+          <div class="page-header">
+            <div class="page-title-group">
+              <h1>My Day</h1>
+              <p>Your focused agenda and daily productivity command center.</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-primary btn-sm" onclick="window.tasksUI.openCreateModal(new Date().toISOString().split('T')[0])">+ Add Task For Today</button>
+            </div>
+          </div>
+
+          <div class="productivity-score-box" style="margin-bottom: 2rem;">
+            <div class="score-circle">
+              <svg viewBox="0 0 80 80">
+                <circle class="score-circle-bg" cx="40" cy="40" r="35"></circle>
+                <circle class="score-circle-bar" id="myday-score-bar" cx="40" cy="40" r="35"></circle>
+              </svg>
+              <div class="score-number" id="myday-score-text">0%</div>
+            </div>
+            <div>
+              <h3>Daily Productivity Score</h3>
+              <p style="font-size: 0.875rem;">Calculated based on today's tasks completed and progress toward active goals. Keep crushing it!</p>
+            </div>
+          </div>
+
+          <div class="grid-2col">
+            <div>
+              <div class="card" style="margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                  <h3>Today's Checklist</h3>
+                  <span class="badge badge-primary">Due Today</span>
+                </div>
+                <div id="myday-tasks-list"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                  <h3>Today's Expenses</h3>
+                  <span class="badge badge-danger" id="myday-expenses-total">$0.00</span>
+                </div>
+                <div id="myday-expenses-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 3: TASKS ================= -->
+        <div id="view-tasks" class="view-container">
+          <div class="page-header">
+            <div class="page-title-group">
+              <h1>Task Manager</h1>
+              <p>Organize, schedule and prioritize your daily and upcoming obligations.</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-primary" onclick="window.tasksUI.openCreateModal()">
+                + Create Task
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter Tabs & Controls -->
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="filter-bar" style="margin-bottom: 0;">
+              <button class="filter-pill task-filter-btn active" data-status="all" onclick="window.tasksUI.setFilterStatus('all')">
+                All (<span id="task-tab-count-all">0</span>)
+              </button>
+              <button class="filter-pill task-filter-btn" data-status="today" onclick="window.tasksUI.setFilterStatus('today')">
+                Today (<span id="task-tab-count-today">0</span>)
+              </button>
+              <button class="filter-pill task-filter-btn" data-status="upcoming" onclick="window.tasksUI.setFilterStatus('upcoming')">
+                Upcoming (<span id="task-tab-count-upcoming">0</span>)
+              </button>
+              <button class="filter-pill task-filter-btn" data-status="completed" onclick="window.tasksUI.setFilterStatus('completed')">
+                Completed (<span id="task-tab-count-completed">0</span>)
+              </button>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+              <input type="text" class="form-control" style="width: 200px; padding: 0.4rem 0.75rem;" placeholder="Search tasks..." oninput="window.tasksUI.setSearchQuery(this.value)">
+
+              <select class="form-control" style="width: 130px; padding: 0.4rem 0.5rem;" onchange="window.tasksUI.setFilterCategory(this.value)">
+                <option value="all">All Categories</option>
+                <option value="Work">Work</option>
+                <option value="Study">Study</option>
+                <option value="Personal">Personal</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Other">Other</option>
+              </select>
+
+              <select class="form-control" style="width: 120px; padding: 0.4rem 0.5rem;" onchange="window.tasksUI.setFilterPriority(this.value)">
+                <option value="all">All Priority</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+
+              <select class="form-control" style="width: 130px; padding: 0.4rem 0.5rem;" onchange="window.tasksUI.setFilterSort(this.value)">
+                <option value="date-desc">Newest Due</option>
+                <option value="date-asc">Earliest Due</option>
+                <option value="priority-desc">Priority</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Tasks List -->
+          <div id="tasks-items-list"></div>
+        </div>
+
+        <!-- ================= VIEW 4: EXPENSES ================= -->
+        <div id="view-expenses" class="view-container">
+          <div class="page-header">
+            <div class="page-title-group">
+              <h1>Expense Tracker</h1>
+              <p>Keep your finances on track with category breakdowns and trend analytics.</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-outline" onclick="window.expensesUI.exportCSV()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Export CSV
+              </button>
+              <button class="btn btn-primary" onclick="window.expensesUI.openCreateModal()">
+                + Log Expense
+              </button>
+            </div>
+          </div>
+
+          <!-- Summary Metric Cards -->
+          <div class="stats-grid" style="margin-bottom: 2rem;">
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-label">Today's Spending</span>
+                <span class="stat-value" id="exp-stat-today">$0.00</span>
+              </div>
+              <div class="stat-icon icon-emerald">💵</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-label">Last 7 Days</span>
+                <span class="stat-value" id="exp-stat-week">$0.00</span>
+              </div>
+              <div class="stat-icon icon-cyan">📅</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-label">This Month</span>
+                <span class="stat-value" id="exp-stat-month">$0.00</span>
+              </div>
+              <div class="stat-icon icon-purple">📊</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-label">Total Tracked</span>
+                <span class="stat-value" id="exp-stat-total">$0.00</span>
+              </div>
+              <div class="stat-icon icon-amber">💰</div>
+            </div>
+          </div>
+
+          <!-- Expense Charts -->
+          <div class="grid-equal-2col" style="margin-bottom: 2rem;">
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <h3>Spending by Category</h3>
+                <span class="badge badge-primary">Breakdown</span>
+              </div>
+              <div class="chart-container-box">
+                <canvas id="expenseCategoryChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <h3>Recent Spending Timeline</h3>
+                <span class="badge badge-danger">Activity</span>
+              </div>
+              <div class="chart-container-box">
+                <canvas id="expenseTimelineChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter Bar -->
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="filter-bar" style="margin-bottom: 0;">
+              <button class="filter-pill exp-filter-pill active" data-range="all" onclick="window.expensesUI.setFilterRange('all')">All Time</button>
+              <button class="filter-pill exp-filter-pill" data-range="today" onclick="window.expensesUI.setFilterRange('today')">Today</button>
+              <button class="filter-pill exp-filter-pill" data-range="week" onclick="window.expensesUI.setFilterRange('week')">This Week</button>
+              <button class="filter-pill exp-filter-pill" data-range="month" onclick="window.expensesUI.setFilterRange('month')">This Month</button>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+              <input type="text" class="form-control" style="width: 200px; padding: 0.4rem 0.75rem;" placeholder="Search expenses..." oninput="window.expensesUI.setSearchQuery(this.value)">
+              <select class="form-control" style="width: 140px; padding: 0.4rem 0.5rem;" onchange="window.expensesUI.setFilterCategory(this.value)">
+                <option value="all">All Categories</option>
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Education">Education</option>
+                <option value="Bills">Bills</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Transactions Table -->
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Payment</th>
+                  <th>Amount</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="expenses-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 5: NOTES ================= -->
+        <div id="view-notes" class="view-container">
+          <div class="page-header">
+            <div class="page-title-group">
+              <h1>Smart Notes</h1>
+              <p>Capture thoughts, meeting notes, project plans, and daily ideas.</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-primary" onclick="window.notesUI.openCreateModal()">
+                + Create Note
+              </button>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="filter-bar" style="margin-bottom: 0;">
+              <button class="filter-pill active" onclick="window.notesUI.setFilterCategory('all')">All</button>
+              <button class="filter-pill" onclick="window.notesUI.setFilterCategory('Work')">Work</button>
+              <button class="filter-pill" onclick="window.notesUI.setFilterCategory('Personal')">Personal</button>
+              <button class="filter-pill" onclick="window.notesUI.setFilterCategory('Ideas')">Ideas</button>
+              <button class="filter-pill" onclick="window.notesUI.setFilterCategory('Study')">Study</button>
+            </div>
+
+            <input type="text" class="form-control" style="width: 240px; padding: 0.4rem 0.75rem;" placeholder="Search notes..." oninput="window.notesUI.setSearchQuery(this.value)">
+          </div>
+
+          <div class="notes-grid" id="notes-cards-grid"></div>
+        </div>
+
+        <!-- ================= VIEW 6: GOALS ================= -->
+        <div id="view-goals" class="view-container">
+          <div class="page-header">
+            <div class="page-title-group">
+              <h1>Goals & Milestones</h1>
+              <p>Transform long-term aspirations into measurable, progressive daily wins.</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-primary" onclick="window.goalsUI.openCreateModal()">
+                + Create Goal
+              </button>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="filter-bar" style="margin-bottom: 0;">
+              <button class="filter-pill goal-filter-pill active" data-status="all" onclick="window.goalsUI.setFilterStatus('all')">All Goals</button>
+              <button class="filter-pill goal-filter-pill" data-status="in_progress" onclick="window.goalsUI.setFilterStatus('in_progress')">In Progress</button>
+              <button class="filter-pill goal-filter-pill" data-status="completed" onclick="window.goalsUI.setFilterStatus('completed')">Completed</button>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem;">
+              <input type="text" class="form-control" style="width: 200px; padding: 0.4rem 0.75rem;" placeholder="Search goals..." oninput="window.goalsUI.setSearchQuery(this.value)">
+              <select class="form-control" style="width: 140px; padding: 0.4rem 0.5rem;" onchange="window.goalsUI.setFilterCategory(this.value)">
+                <option value="all">All Categories</option>
+                <option value="Career">Career</option>
+                <option value="Study">Study</option>
+                <option value="Savings">Savings</option>
+                <option value="Fitness">Fitness</option>
+                <option value="Personal">Personal</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="goals-grid" id="goals-cards-grid"></div>
+        </div>
+
+        <!-- ================= VIEW 7: ADMIN PANEL ================= -->
+        <div id="view-admin" class="view-container">
+          <!-- Access Denied Guard -->
+          <div id="admin-access-denied" class="card" style="text-align: center; padding: 4rem 2rem; display: none;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🛡️</div>
+            <h2>Administrator Clearance Required</h2>
+            <p style="max-width: 480px; margin: 0.5rem auto 1.5rem;">
+              This section is reserved for authorized system administrators. As an evaluator, you can easily unlock and explore this functionality.
+            </p>
+            <button class="btn btn-primary" onclick="window.adminUI.switchRoleToAdmin()">
+              Grant Administrator Access (Demo Mode)
+            </button>
+          </div>
+
+          <!-- Authorized Admin Content -->
+          <div id="admin-panel-content">
+            <div class="page-header">
+              <div class="page-title-group">
+                <h1>DailyDesk Administration</h1>
+                <p>System metrics, database health, registered users, and Supabase integration.</p>
+              </div>
+              <div class="page-actions">
+                <button class="btn btn-secondary btn-sm" onclick="window.adminUI.switchRoleToUser()">Switch to User View</button>
+                <button class="btn btn-outline btn-sm" onclick="window.adminUI.openSqlModal()">SQL Schema</button>
+                <button class="btn btn-primary btn-sm" onclick="window.adminUI.seedDemoData()">Seed Sample Data</button>
+              </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-info">
+                  <span class="stat-label">Registered Accounts</span>
+                  <span class="stat-value" id="admin-kpi-users">3</span>
+                  <span class="stat-subtitle">Supabase Auth users</span>
+                </div>
+                <div class="stat-icon icon-purple">👥</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-info">
+                  <span class="stat-label">Tasks Logged</span>
+                  <span class="stat-value" id="admin-kpi-tasks">0</span>
+                  <span class="stat-subtitle">Across active accounts</span>
+                </div>
+                <div class="stat-icon icon-emerald">✓</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-info">
+                  <span class="stat-label">Financial Tracking Volume</span>
+                  <span class="stat-value" id="admin-kpi-expenses">$0.00</span>
+                  <span class="stat-subtitle">Total recorded spending</span>
+                </div>
+                <div class="stat-icon icon-cyan">💳</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-info">
+                  <span class="stat-label">Active Milestones</span>
+                  <span class="stat-value" id="admin-kpi-goals">0</span>
+                  <span class="stat-subtitle">Goals in progress</span>
+                </div>
+                <div class="stat-icon icon-amber">🎯</div>
+              </div>
+            </div>
+
+            <!-- Supabase Table Status & Health -->
+            <div class="card" style="margin-bottom: 2rem;">
+              <h3 style="margin-bottom: 0.75rem;">Supabase Database Status & Connectivity</h3>
+              <div id="admin-db-health-status"></div>
+            </div>
+
+            <!-- Users Table & Activity Log Split -->
+            <div class="grid-2col">
+              <div class="card">
+                <h3 style="margin-bottom: 1.25rem;">Registered Users</h3>
+                <div class="table-responsive">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Created</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="admin-users-table-body"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="card">
+                <h3 style="margin-bottom: 1.25rem;">System Activity Audit</h3>
+                <div id="admin-logs-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 8: PROFILE ================= -->
+        <div id="view-profile" class="view-container">
+          <div class="page-header">
+            <div class="page-title-group">
+              <h1>User Profile & Preferences</h1>
+              <p>Manage your account settings, currency format and daily inspirational quote.</p>
+            </div>
+          </div>
+
+          <div style="max-width: 600px;">
+            <div class="card">
+              <form onsubmit="window.app.saveProfile(event)">
+                <div style="display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem;">
+                  <div class="user-avatar user-avatar-display" style="width: 64px; height: 64px; font-size: 1.5rem;">U</div>
+                  <div>
+                    <h3 class="user-name-display">Alex Morgan</h3>
+                    <span id="profile-role-badge" class="badge badge-primary">user</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Full Name</label>
+                  <input type="text" id="profile-input-name" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Email Address (Supabase)</label>
+                  <input type="email" id="profile-input-email" class="form-control" disabled style="opacity: 0.7;">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Preferred Currency</label>
+                  <select id="profile-input-currency" class="form-control">
+                    <option value="$">USD ($)</option>
+                    <option value="€">EUR (€)</option>
+                    <option value="£">GBP (£)</option>
+                    <option value="₹">INR (₹)</option>
+                    <option value="¥">JPY (¥)</option>
+                    <option value="AED">AED (AED)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Daily Motivational Quote / Affirmation</label>
+                  <input type="text" id="profile-input-quote" class="form-control" placeholder="Focus on progress, not perfection.">
+                </div>
+
+                <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end;">
+                  <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODALS -->
+  <!-- ========================================================================= -->
+
+  <!-- AUTH MODAL -->
+  <div id="modal-auth" class="modal-backdrop">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="auth-modal-title" class="modal-title">Sign In to DailyDesk</h3>
+        <button class="modal-close-btn" onclick="window.app.closeModal('modal-auth')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; background: var(--bg-surface-alt); padding: 0.25rem; border-radius: var(--radius-md);">
+          <label style="flex: 1; text-align: center; cursor: pointer; padding: 0.4rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.8125rem;">
+            <input type="radio" name="auth-mode" id="auth-mode-signin" checked onchange="window.app.toggleAuthMode(false)" style="display: none;">
+            Sign In
+          </label>
+          <label style="flex: 1; text-align: center; cursor: pointer; padding: 0.4rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.8125rem;">
+            <input type="radio" name="auth-mode" id="auth-mode-signup" onchange="window.app.toggleAuthMode(true)" style="display: none;">
+            Create Account
+          </label>
+        </div>
+
+        <form onsubmit="window.app.handleEmailAuth(event)">
+          <div id="auth-name-group" class="form-group" style="display: none;">
+            <label class="form-label">Your Full Name</label>
+            <input type="text" id="auth-input-name" class="form-control" placeholder="Alex Morgan">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" id="auth-input-email" class="form-control" placeholder="user@dailydesk.app" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="auth-input-password" class="form-control" placeholder="••••••••" required>
+          </div>
+          <button type="submit" id="auth-submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+            Sign In
+          </button>
+        </form>
+
+        <div style="text-align: center; margin: 1.5rem 0 0.75rem; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
+          — Or 1-Click Competition Presentation Access —
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+          <button class="btn btn-secondary" style="flex: 1;" onclick="window.app.loginDemo('user')">
+            Demo User
+          </button>
+          <button class="btn btn-outline" style="flex: 1;" onclick="window.app.loginDemo('admin')">
+            Demo Admin
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASK MODAL -->
+  <div id="modal-task" class="modal-backdrop">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="task-modal-title" class="modal-title">Create Task</h3>
+        <button class="modal-close-btn" onclick="window.app.closeModal('modal-task')">✕</button>
+      </div>
+      <form onsubmit="window.tasksUI.saveTaskFromModal(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Task Title *</label>
+            <input type="text" id="task-input-title" class="form-control" placeholder="e.g., Prepare financial summary for Q3" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description / Subtasks</label>
+            <textarea id="task-input-desc" class="form-control" placeholder="Add any details, checklists, or links..."></textarea>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="task-input-category" class="form-control">
+                <option value="Work">Work</option>
+                <option value="Study">Study</option>
+                <option value="Personal">Personal</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <select id="task-input-priority" class="form-control">
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Due Date</label>
+            <input type="date" id="task-input-date" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="window.app.closeModal('modal-task')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- EXPENSE MODAL -->
+  <div id="modal-expense" class="modal-backdrop">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="expense-modal-title" class="modal-title">Log Expense</h3>
+        <button class="modal-close-btn" onclick="window.app.closeModal('modal-expense')">✕</button>
+      </div>
+      <form onsubmit="window.expensesUI.saveExpenseFromModal(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Expense Title *</label>
+            <input type="text" id="expense-input-title" class="form-control" placeholder="e.g., Grocery haul at Trader Joe's" required>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Amount *</label>
+              <input type="number" step="0.01" min="0.01" id="expense-input-amount" class="form-control" placeholder="0.00" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="expense-input-category" class="form-control">
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Education">Education</option>
+                <option value="Bills">Bills</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Expense Date</label>
+              <input type="date" id="expense-input-date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Payment Method</label>
+              <select id="expense-input-payment" class="form-control">
+                <option value="Card">Debit / Credit Card</option>
+                <option value="Cash">Cash</option>
+                <option value="Online Transfer">Online Transfer</option>
+                <option value="UPI / Wallet">UPI / Wallet</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Notes / Description</label>
+            <textarea id="expense-input-desc" class="form-control" placeholder="Receipt details, itemized breakdown..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="window.app.closeModal('modal-expense')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Expense</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- NOTE MODAL -->
+  <div id="modal-note" class="modal-backdrop">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="note-modal-title" class="modal-title">Create Note</h3>
+        <button class="modal-close-btn" onclick="window.app.closeModal('modal-note')">✕</button>
+      </div>
+      <form onsubmit="window.notesUI.saveNoteFromModal(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Title *</label>
+            <input type="text" id="note-input-title" class="form-control" placeholder="Note headline..." required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Content</label>
+            <textarea id="note-input-content" class="form-control" style="min-height: 120px;" placeholder="Write your notes, meeting minutes, bullet points..."></textarea>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: center;">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="note-input-category" class="form-control">
+                <option value="General">General</option>
+                <option value="Work">Work</option>
+                <option value="Personal">Personal</option>
+                <option value="Ideas">Ideas</option>
+                <option value="Study">Study</option>
+                <option value="Meeting">Meeting</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-top: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.875rem;">
+                <input type="checkbox" id="note-input-pinned">
+                <span>📌 Pin this note to top</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Accent Color</label>
+            <div id="note-color-picker-container" style="display: flex; gap: 0.625rem; align-items: center;"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="window.app.closeModal('modal-note')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Note</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- GOAL MODAL -->
+  <div id="modal-goal" class="modal-backdrop">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="goal-modal-title" class="modal-title">Create Goal</h3>
+        <button class="modal-close-btn" onclick="window.app.closeModal('modal-goal')">✕</button>
+      </div>
+      <form onsubmit="window.goalsUI.saveGoalFromModal(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Goal Title *</label>
+            <input type="text" id="goal-input-title" class="form-control" placeholder="e.g., Complete AWS Cloud Certification" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description / Action Plan</label>
+            <textarea id="goal-input-desc" class="form-control" placeholder="What are the essential milestones to reach this?"></textarea>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="goal-input-category" class="form-control">
+                <option value="Career">Career</option>
+                <option value="Study">Study</option>
+                <option value="Savings">Savings</option>
+                <option value="Fitness">Fitness</option>
+                <option value="Personal">Personal</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Target Completion Date</label>
+              <input type="date" id="goal-input-date" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <label class="form-label" style="margin-bottom: 0;">Progress</label>
+              <span id="goal-progress-display" style="font-weight: 700; color: var(--primary);">0%</span>
+            </div>
+            <input type="range" min="0" max="100" id="goal-input-progress" class="form-control" style="padding: 0;" oninput="document.getElementById('goal-progress-display').textContent = this.value + '%'">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="window.app.closeModal('modal-goal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Goal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- GLOBAL SEARCH MODAL (Ctrl+K) -->
+  <div id="modal-search" class="modal-backdrop">
+    <div class="modal-container search-modal-container">
+      <div class="search-modal-input-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="global-search-input" class="search-modal-input" placeholder="Type to search tasks, expenses, notes, goals...">
+        <span class="search-shortcut-kbd">ESC</span>
+      </div>
+      <div class="search-results-list" id="global-search-results"></div>
+    </div>
+  </div>
+
+  <!-- SQL SCHEMA SETUP MODAL -->
+  <div id="modal-sql-schema" class="modal-backdrop">
+    <div class="modal-container" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Supabase Database Setup</h3>
+        <button class="modal-close-btn" onclick="window.app.closeModal('modal-sql-schema')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.875rem; margin-bottom: 1rem;">
+          To enable full Supabase cloud persistence with Row Level Security (RLS), open your Supabase SQL Editor and execute this schema script:
+        </p>
+        <pre id="sql-schema-code" style="background: var(--bg-surface-alt); padding: 1rem; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 0.75rem; max-height: 240px; overflow-y: auto; color: var(--text-primary); border: 1px solid var(--border-color);">
+-- Profiles, Tasks, Expenses, Notes, Goals with RLS
+create table if not exists public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  email text, full_name text, currency text default '$', daily_quote text, role text default 'user'
+);
+create table if not exists public.tasks (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  title text not null, description text, category text default 'Work',
+  priority text default 'Medium', due_date date, completed boolean default false,
+  created_at timestamptz default now()
+);
+create table if not exists public.expenses (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  title text not null, amount numeric(12,2) not null, category text default 'Other',
+  expense_date date default current_date, payment_method text, description text,
+  created_at timestamptz default now()
+);
+create table if not exists public.notes (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  title text not null, content text, category text default 'General',
+  color text default '#4f46e5', is_pinned boolean default false,
+  created_at timestamptz default now()
+);
+create table if not exists public.goals (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  title text not null, description text, category text default 'Career',
+  target_date date, progress integer default 0, status text default 'In Progress',
+  created_at timestamptz default now()
+);
+-- Enable RLS
+alter table public.profiles enable row level security;
+alter table public.tasks enable row level security;
+alter table public.expenses enable row level security;
+alter table public.notes enable row level security;
+alter table public.goals enable row level security;
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="window.app.closeModal('modal-sql-schema')">Close</button>
+        <button class="btn btn-primary" onclick="window.adminUI.copySqlSchema()">Copy SQL to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/ui-dashboard.js"></script>
+  <script src="js/ui-tasks.js"></script>
+  <script src="js/ui-expenses.js"></script>
+  <script src="js/ui-notes.js"></script>
+  <script src="js/ui-goals.js"></script>
+  <script src="js/ui-admin.js"></script>
+  <script src="js/ui-search.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
